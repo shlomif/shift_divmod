@@ -28,7 +28,7 @@ from shift_divmod import ShiftDivMod
 
 
 def test_divmod():
-    for m in range(2, 1000):
+    for m in range(2, 100):
         modder = ShiftDivMod.from_int(m)
         for x in range(10*m):
             d, mod = modder.divmod(x)
