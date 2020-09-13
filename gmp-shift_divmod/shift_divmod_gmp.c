@@ -69,6 +69,14 @@ static void shift_divmod_gmp__mod(
 }
 #endif
 
+#ifdef VERBOSE
+#define v_printf(fmt, ...) printf(fmt, __VA_ARGS__)
+#else
+#define v_printf(fmt, ...)                                                     \
+    {                                                                          \
+    }
+#endif
+
 static unsigned long mytest(const unsigned long p)
 {
 #ifdef USE_SHIFT
@@ -98,40 +106,27 @@ static unsigned long mytest(const unsigned long p)
     // for (unsigned long i = 0; i < p; ++i)
     for (unsigned long i = 0; i < 1000; ++i)
     {
-#ifdef USE_SHIFT
-#ifdef VERBOSE
-        printf("sq %lu\n", i);
-#endif
+        v_printf("sq %lu\n", i);
         mpz_mul(ret, ret, ret);
+
 #if 0
-    gmp_fprintf(stdout, "%Zd\n", ret);
-#endif
-#ifdef VERBOSE
-        printf("mod %lu\n", i);
+        gmp_fprintf(stdout, "%Zd\n", ret);
 #endif
 
+        v_printf("mod %lu\n", i);
+
+#ifdef USE_SHIFT
         shift_divmod_gmp__mod(&pint2p, ret);
-#ifdef VERBOSE
-        printf("after mod %lu\n", i);
-#endif
 #else
-#ifdef VERBOSE
-        printf("sq %lu\n", i);
-#endif
-        mpz_mul(ret, ret, ret);
-#ifdef VERBOSE
-        printf("mod %lu\n", i);
-#endif
 #if 0
         if (mpz_cmp(ret, pint2p) >= 0)
 #endif
         {
             mpz_mod(ret, ret, pint2p);
         }
-#ifdef VERBOSE
-        printf("after mod %lu\n", i);
 #endif
-#endif
+
+        v_printf("after mod %lu\n", i);
     }
 #endif
 #if 0
