@@ -28,22 +28,54 @@
 #ifdef USE_SHIFT
 typedef struct
 {
-    mpz_t base, n, mask;
+    mpz_t base, n, mask, foo, bar;
     unsigned long shift;
 } shift_divmod_gmp__type;
+
+static void shift_divmod_gmp__init(
+    shift_divmod_gmp__type *const dest, mpz_t base, const unsigned long shift)
+{
+    dest->shift = shift;
+    mpz_init_set(dest->base, base);
+    mpz_init(dest->n);
+    mpz_mul_2exp(dest->n, dest->base, dest->shift);
+    mpz_init_set_ui(dest->mask, 1);
+    mpz_mul_2exp(dest->mask, dest->mask, dest->shift);
+    mpz_sub_ui(dest->mask, dest->mask, 1);
+    mpz_init(dest->foo);
+    mpz_init(dest->bar);
+}
+static void shift_divmod_gmp__clear(shift_divmod_gmp__type *const modder)
+{
+    mpz_clear(modder->base);
+    mpz_clear(modder->n);
+    mpz_clear(modder->mask);
+    mpz_clear(modder->foo);
+    mpz_clear(modder->bar);
+}
+
+static void shift_divmod_gmp__mod(
+    shift_divmod_gmp__type *const modder, mpz_t ret)
+{
+    if (mpz_cmp(ret, modder->n) >= 0)
+    {
+        mpz_div_2exp(modder->foo, ret, modder->shift);
+        mpz_mod(modder->foo, modder->foo, modder->base);
+        mpz_mul_2exp(modder->foo, modder->foo, modder->shift);
+        mpz_and(modder->bar, ret, modder->mask);
+        mpz_ior(ret, modder->foo, modder->bar);
+    }
+}
 #endif
 
 static unsigned long mytest(const unsigned long p)
 {
 #ifdef USE_SHIFT
     shift_divmod_gmp__type pint2p;
-    pint2p.shift = p;
-    mpz_init_set_ui(pint2p.base, p);
-    mpz_init(pint2p.n);
-    mpz_mul_2exp(pint2p.n, pint2p.base, p);
-    mpz_init_set_ui(pint2p.mask, 1);
-    mpz_mul_2exp(pint2p.mask, pint2p.mask, pint2p.shift);
-    mpz_sub_ui(pint2p.mask, pint2p.mask, 1);
+    mpz_t pmpz;
+    mpz_init_set_ui(pmpz, p);
+    shift_divmod_gmp__init(&pint2p, pmpz, p);
+    mpz_clear(pmpz);
 #else
     mpz_t pint2p;
     mpz_init_set_ui(pint2p, p);
@@ -55,8 +87,10 @@ static unsigned long mytest(const unsigned long p)
     mpz_mul_2exp(t2int2p, t2int2p, p);
 #endif
 #endif
+
     mpz_t ret;
     mpz_init_set_ui(ret, 2);
+
 #ifdef OPT
     mpz_powm(ret, ret, t2int2p, pint2p);
 #else
@@ -75,19 +109,7 @@ static unsigned long mytest(const unsigned long p)
         printf("mod %lu\n", i);
 #endif
 
-        if (mpz_cmp(ret, pint2p.n) >= 0)
-        {
-            mpz_t foo, bar;
-            mpz_init(foo);
-            mpz_init(bar);
-            mpz_div_2exp(foo, ret, pint2p.shift);
-            mpz_mod(foo, foo, pint2p.base);
-            mpz_mul_2exp(foo, foo, pint2p.shift);
-            mpz_and(bar, ret, pint2p.mask);
-            mpz_ior(ret, foo, bar);
-            mpz_clear(foo);
-            mpz_clear(bar);
-        }
+        shift_divmod_gmp__mod(&pint2p, ret);
 #ifdef VERBOSE
         printf("after mod %lu\n", i);
 #endif
@@ -107,9 +129,7 @@ static unsigned long mytest(const unsigned long p)
     const unsigned long rett = mpz_get_ui(ret);
     mpz_clear(ret);
 #ifdef USE_SHIFT
-    mpz_clear(pint2p.base);
-    mpz_clear(pint2p.n);
-    mpz_clear(pint2p.mask);
+    shift_divmod_gmp__clear(&pint2p);
 #else
     mpz_clear(pint2p);
 #endif
