@@ -110,6 +110,8 @@ def mytest(run_mode, p, verbose=False):
                 verbose_print('mod', i, flush=True)
                 ret = ShiftDivMod.from_int(pint2p).mod(ret)
                 verbose_print('after mod', i, display.mod(ret), flush=True)
+        else:
+            raise Exception("Unknown run_mode '{}'!".format(run_mode))
     ret = ret % (p*p) // p
     stopped = stop
     stop = False
@@ -123,6 +125,7 @@ def mytest(run_mode, p, verbose=False):
 
 def main(which):
     run_mode = which
+    p = 9816593
     '''
     if which == "builtinpow":
         OPT = 1
@@ -135,18 +138,18 @@ def main(which):
     '''
     if run_mode == "bench":
         import signal
-        bench = mytest(run_mode='gen_shift_mod', p=9816593)
+        bench = mytest(run_mode='gen_shift_mod', p=p)
         print(bench)
-        bench = mytest(run_mode='shiftmodpre', p=9816593)
+        bench = mytest(run_mode='shiftmodpre', p=p)
         print(bench)
-        bench = mytest(run_mode='gmpy', p=9816593)
+        bench = mytest(run_mode='gmpy', p=p)
         print(bench)
         signal.signal(signal.SIGALRM, _my_alarm_handler)
         signal.alarm(100)
-        bench = mytest(run_mode='builtinops', p=9816593)
+        bench = mytest(run_mode='builtinops', p=p)
         print(bench)
     else:
-        x = mytest(run_mode=run_mode, p=9816593)
+        x = mytest(run_mode=run_mode, p=p)
         print(x)
 
 
