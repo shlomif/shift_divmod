@@ -28,7 +28,7 @@
 #ifdef USE_SHIFT
 typedef struct
 {
-    mpz_t base, n, mask, foo, bar;
+    mpz_t base, n, mask, shifted_input, lower_and_masked_input;
     unsigned long shift;
 } shift_divmod_gmp__type;
 
@@ -42,16 +42,16 @@ static void shift_divmod_gmp__init(
     mpz_init_set_ui(dest->mask, 1);
     mpz_mul_2exp(dest->mask, dest->mask, dest->shift);
     mpz_sub_ui(dest->mask, dest->mask, 1);
-    mpz_init(dest->foo);
-    mpz_init(dest->bar);
+    mpz_init(dest->shifted_input);
+    mpz_init(dest->lower_and_masked_input);
 }
 static void shift_divmod_gmp__clear(shift_divmod_gmp__type *const modder)
 {
     mpz_clear(modder->base);
     mpz_clear(modder->n);
     mpz_clear(modder->mask);
-    mpz_clear(modder->foo);
-    mpz_clear(modder->bar);
+    mpz_clear(modder->shifted_input);
+    mpz_clear(modder->lower_and_masked_input);
 }
 
 static void shift_divmod_gmp__mod(
@@ -59,11 +59,12 @@ static void shift_divmod_gmp__mod(
 {
     if (mpz_cmp(ret, modder->n) >= 0)
     {
-        mpz_div_2exp(modder->foo, ret, modder->shift);
-        mpz_mod(modder->foo, modder->foo, modder->base);
-        mpz_mul_2exp(modder->foo, modder->foo, modder->shift);
-        mpz_and(modder->bar, ret, modder->mask);
-        mpz_ior(ret, modder->foo, modder->bar);
+        mpz_div_2exp(modder->shifted_input, ret, modder->shift);
+        mpz_mod(modder->shifted_input, modder->shifted_input, modder->base);
+        mpz_mul_2exp(
+            modder->shifted_input, modder->shifted_input, modder->shift);
+        mpz_and(modder->lower_and_masked_input, ret, modder->mask);
+        mpz_ior(ret, modder->shifted_input, modder->lower_and_masked_input);
     }
 }
 #endif
