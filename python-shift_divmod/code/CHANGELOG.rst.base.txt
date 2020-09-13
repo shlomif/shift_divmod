@@ -1,3 +1,6 @@
+0.2.0
+    Add the benchmarks and refactor/extend the example code.
+
 0.0.2
     Documentation fixes and clarifications.
 

@@ -43,3 +43,41 @@ in this manner was rejected.
 libdivide ( https://github.com/ridiculousfish/libdivide ) provides a
 different, but also interesting, approach for optimizing division.
 
+BENCHMARKS:
+-----------
+
+On my system, I got these results after running
+``python3 code/examples/shift_divmod_example.py bench`` (reformated
+for clarity):
+
+::
+
+    {'val': 5206685, 'time': 38.86349368095398, 'reached': 1000,
+     'interrupted': False, 'mode': 'gen_shift_mod'}
+    {'val': 5206685, 'time': 39.018390417099, 'reached': 1000,
+     'interrupted': False, 'mode': 'shiftmodpre'}
+    {'val': mpz(5206685), 'time': 167.4433994293213, 'reached': 1000,
+     'interrupted': False, 'mode': 'gmpy'}
+    {'val': 3346424, 'time': 229.94409656524658, 'reached': 25,
+     'interrupted': True, 'mode': 'builtinops'}
+
+    System:    Kernel: 5.8.8-200.fc32.x86_64 x86_64 bits: 64
+        Desktop: KDE Plasma 5.18.5
+               Distro: Fedora release 32 (Thirty Two)
+    CPU:       Info: Quad Core model: Intel Core i5-8259U
+        bits: 64 type: MT MCP L2 cache: 6144 KiB
+               Speed: 1600 MHz min/max: 400/3800 MHz Core speeds (MHz):
+                    1: 1600 2: 1600 3: 1601
+               4: 1600 5: 1600 6: 1601 7: 1601 8: 1601
+    Graphics:  Device-1: Intel Iris Plus Graphics 655 driver: i915 v: kernel
+               Display: server: Fedora Project
+               X.org 1.20.8 driver: modesetting unloaded: fbdev,vesa
+               resolution: 1920x1080~60Hz
+               OpenGL: renderer: Mesa Intel Iris Plus
+               Graphics 655 (CFL GT3) v: 4.6 Mesa 20.1.7
+
+As can be noticed the shift_divmod based versions are over 4 times faster than
+GMP and much faster than the builtinops which only completed 25 out of 1,000 iterations
+before being interrupted. Note that for that use case, using GMP's modular exponentiation
+seems even faster.
+
