@@ -40,3 +40,6 @@ proof-of-concept for a potential improvement for the built in cpython3
 operations here: https://bugs.python.org/issue41487 . However, changing cpython3
 in this manner was rejected.
 
+libdivide ( https://github.com/ridiculousfish/libdivide ) provides a
+different, but also interesting, approach for optimizing division.
+
