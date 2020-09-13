@@ -32,6 +32,8 @@ def test_divmod():
         modder = ShiftDivMod.from_int(m)
         for x in range(10*m):
             d, mod = modder.divmod(x)
+            assert modder.div(x) == d
+            assert modder.mod(x) == mod
             assert x == d*modder.n + mod
             assert 0 <= mod < modder.n
             assert (d, mod) == divmod(x, m)
