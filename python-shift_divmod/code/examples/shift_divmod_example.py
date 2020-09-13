@@ -22,40 +22,58 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 import sys
+import time
 
-OPT = "builtinops"
+
+global stop
+stop = False
 
 
-def mytest(p):
+def _my_alarm_handler(signum, frame):
+    global stop
+    stop = True
+
+
+def mytest(run_mode, p, verbose=False):
+    def verbose_print(*args, **e):
+        if verbose:
+            print(*args, **e)
+    global stop
+    start = time.time()
     pint2p = p << p
-    myrange = range(1000)
-    if OPT == "builtinpow":
+    reached = top = 1000
+    myrange = range(top)
+    if run_mode == "builtinpow":
         ret = pow(2, (1 << p), pint2p)
-    elif OPT == "gmpy":
+    elif run_mode == "gmpy":
         from gmpy2 import mpz
         ret = mpz(2)
         pint2p = mpz(pint2p)
         mod = mpz(10 ** 20)
         for i in myrange:
-            print('sq', i, flush=True)
+            verbose_print('sq', i, flush=True)
             ret *= ret
-            print('mod', i, flush=True)
+            verbose_print('mod', i, flush=True)
             ret %= pint2p
-            print('after mod', i, (ret % mod), flush=True)
-    elif OPT == "builtinops":
+            verbose_print('after mod', i, (ret % mod), flush=True)
+    elif run_mode == "builtinops":
         ret = 2
         for i in myrange:
-            print('sq', i, flush=True)
+            if stop:
+                reached = i
+                break
+            verbose_print('sq', i, flush=True)
             ret *= ret
-            print('mod', i, flush=True)
+            verbose_print('mod', i, flush=True)
             ret %= pint2p
-            print('after mod', i, (ret % 10 ** 20), flush=True)
+            verbose_print('after mod', i, (ret % 10 ** 20), flush=True)
     else:
         from shift_divmod import ShiftDivMod
         ret = 2
-        if OPT == "test":
+        display = ShiftDivMod.from_int(10 ** 20)
+        if run_mode == "test":
             for m in range(2, 10000):
-                print("Testing m =", m, flush=True)
+                verbose_print("Testing m =", m, flush=True)
                 modder = ShiftDivMod.from_int(m)
                 for x in range(10*m):
                     d, mod = modder.divmod(x)
@@ -63,12 +81,12 @@ def mytest(p):
                     assert 0 <= mod < modder.n
                     assert (d, mod) == divmod(x, m)
 
-        elif OPT == "shiftmodpre":
+        elif run_mode == "shiftmodpre":
             m = ShiftDivMod(p, p)
             for i in myrange:
-                print('sq', i, flush=True)
+                verbose_print('sq', i, flush=True)
                 ret *= ret
-                print('mod', i, flush=True)
+                verbose_print('mod', i, flush=True)
                 # m = ShiftDivMod.from_int(pint2p)
                 d, mod = m.divmod(ret)
                 if 0:
@@ -76,28 +94,35 @@ def mytest(p):
                     assert 0 <= mod < m.n
                 ret = mod
                 # ret = m.mod(ret)
-                print('after mod', i, (ret % 10 ** 20), flush=True)
-        elif OPT == "gen_shift_mod":
+                verbose_print('after mod', i, display.mod(ret), flush=True)
+        elif run_mode == "gen_shift_mod":
             m = ShiftDivMod.from_int(pint2p)
             for i in myrange:
-                print('sq', i, flush=True)
+                verbose_print('sq', i, flush=True)
                 ret *= ret
-                print('mod', i, flush=True)
+                verbose_print('mod', i, flush=True)
                 ret = m.mod(ret)
-                print('after mod', i, (ret % 10 ** 20), flush=True)
-        elif OPT == "jitshift":
+                verbose_print('after mod', i, display.mod(ret), flush=True)
+        elif run_mode == "jitshift":
             for i in myrange:
-                print('sq', i, flush=True)
+                verbose_print('sq', i, flush=True)
                 ret *= ret
-                print('mod', i, flush=True)
+                verbose_print('mod', i, flush=True)
                 ret = ShiftDivMod.from_int(pint2p).mod(ret)
-                print('after mod', i, (ret % 10 ** 20), flush=True)
-    return ret % (p*p) // p
+                verbose_print('after mod', i, display.mod(ret), flush=True)
+    ret = ret % (p*p) // p
+    stopped = stop
+    stop = False
+    end = time.time()
+    return {
+        'val': ret, 'time': (end-start),
+        'reached': reached,
+        'interrupted': stopped, 'mode': run_mode,
+    }
 
 
 def main(which):
-    global OPT
-    OPT = which
+    run_mode = which
     '''
     if which == "builtinpow":
         OPT = 1
@@ -108,9 +133,19 @@ def main(which):
     else:
         raise Exception("unknown choice")
     '''
-    x = mytest(9816593)
-    print(x)
-    return
+    if run_mode == "bench":
+        import signal
+        bench = mytest(run_mode='gen_shift_mod', p=9816593)
+        print(bench)
+        bench = mytest(run_mode='shiftmodpre', p=9816593)
+        print(bench)
+        signal.signal(signal.SIGALRM, _my_alarm_handler)
+        signal.alarm(100)
+        bench = mytest(run_mode='builtinops', p=9816593)
+        print(bench)
+    else:
+        x = mytest(run_mode=run_mode, p=9816593)
+        print(x)
 
 
 if __name__ == "__main__":
