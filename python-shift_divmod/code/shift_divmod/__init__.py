@@ -48,9 +48,9 @@ class ShiftDivMod:
         return div, ((mod << self.shift) | (inp & self.mask))
 
     def mod(self, inp):
-        """calculate inp % self.n"""
+        """calculate inp % self.n . Uses .divmod() ."""
         return self.divmod(inp)[1]
 
     def div(self, inp):
-        """calculate inp // self.n"""
+        """calculate inp // self.n . Uses .divmod() ."""
         return self.divmod(inp)[0]

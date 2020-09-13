@@ -1,7 +1,13 @@
 PURPOSE
 -------
 
-This implement faster divmod() (and mod()) for moduli with trailing 0 bits.
+This distribution implements faster divmod() (and ``.mod()``) operations
+for moduli with a large number of trailing 0 bits (where the div/mod base
+is divisible by ``2 ** n`` for an integer `n`).
+
+It should yield the same result as the built-n divmod() function for
+positive numerators (its behaviour for negative ones is currently
+untested and undefined).
 
 INSTALLATION
 ------------
@@ -18,16 +24,19 @@ USAGE
     base = 997
     shift = 1200
     modder = ShiftDivMod(base, shift)
-    # Or use:
-    # modder = ShiftDivMod.from_int(base << shift)
+    # Alternative constructor which may require more
+    # work and eventualy calls the default constructor
+    modder = ShiftDivMod.from_int(base << shift)
 
-    # same as divmod(x, (base << shift))
+    x = 10 ** 500
+    # Same as divmod(x, (base << shift))
     print( modder.divmod(x) )
 
 NOTES
 -----
 
-This was proposed as a proof-of-concept for
-a potential improvement for the built in cpython3
-operations here: https://bugs.python.org/issue41487 but was
-rejected.
+The code from which this distribution has been derived, was proposed as a
+proof-of-concept for a potential improvement for the built in cpython3
+operations here: https://bugs.python.org/issue41487 . However, changing cpython3
+in this manner was rejected.
+
