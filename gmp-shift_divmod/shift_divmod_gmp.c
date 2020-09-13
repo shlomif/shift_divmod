@@ -114,11 +114,22 @@ static unsigned long mytest(const unsigned long p)
         printf("after mod %lu\n", i);
 #endif
 #else
+#ifdef VERBOSE
         printf("sq %lu\n", i);
+#endif
         mpz_mul(ret, ret, ret);
+#ifdef VERBOSE
         printf("mod %lu\n", i);
-        mpz_mod(ret, ret, pint2p);
+#endif
+#if 0
+        if (mpz_cmp(ret, pint2p) >= 0)
+#endif
+        {
+            mpz_mod(ret, ret, pint2p);
+        }
+#ifdef VERBOSE
         printf("after mod %lu\n", i);
+#endif
 #endif
     }
 #endif
