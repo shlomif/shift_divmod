@@ -25,14 +25,15 @@
 #include <gmp.h>
 #include <stdio.h>
 
+#ifdef USE_SHIFT
 typedef struct {
     mpz_t base, n, mask;
     unsigned long shift;
 } shift_divmod_gmp__type;
+#endif
 
 static unsigned long mytest(const unsigned long p)
 {
-#define USE_SHIFT
 #ifdef USE_SHIFT
     shift_divmod_gmp__type pint2p;
     pint2p.shift = p;
@@ -62,12 +63,17 @@ static unsigned long mytest(const unsigned long p)
     for (unsigned long i = 0; i < 1000; ++i)
     {
 #ifdef USE_SHIFT
+#ifdef VERBOSE
         printf("sq %lu\n", i);
+#endif
         mpz_mul(ret, ret, ret);
 #if 0
     gmp_fprintf(stdout, "%Zd\n", ret);
 #endif
+#ifdef VERBOSE
         printf("mod %lu\n", i);
+#endif
+
         if (mpz_cmp(ret, pint2p.n) >= 0)
         {
             mpz_t foo, bar;
@@ -81,7 +87,9 @@ static unsigned long mytest(const unsigned long p)
             mpz_clear(foo);
             mpz_clear(bar);
         }
+#ifdef VERBOSE
         printf("after mod %lu\n", i);
+#endif
 #else
         printf("sq %lu\n", i);
         mpz_mul(ret, ret, ret);
@@ -91,7 +99,9 @@ static unsigned long mytest(const unsigned long p)
 #endif
     }
 #endif
+#if 0
     gmp_fprintf(stdout, "%Zd\n", ret);
+#endif
     mpz_mod_ui(ret, ret, p*p);
     const unsigned long rett = mpz_get_ui(ret);
     mpz_clear(ret);
