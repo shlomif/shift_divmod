@@ -26,7 +26,8 @@
 #include <stdio.h>
 
 #ifdef USE_SHIFT
-typedef struct {
+typedef struct
+{
     mpz_t base, n, mask;
     unsigned long shift;
 } shift_divmod_gmp__type;
@@ -102,7 +103,7 @@ static unsigned long mytest(const unsigned long p)
 #if 0
     gmp_fprintf(stdout, "%Zd\n", ret);
 #endif
-    mpz_mod_ui(ret, ret, p*p);
+    mpz_mod_ui(ret, ret, p * p);
     const unsigned long rett = mpz_get_ui(ret);
     mpz_clear(ret);
 #ifdef USE_SHIFT
