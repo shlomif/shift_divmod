@@ -43,7 +43,12 @@ static unsigned long mytest(const unsigned long p)
     shift_divmod_gmp__type pint2p;
     mpz_t pmpz;
     mpz_init_set_ui(pmpz, p);
+#if 0
     shift_divmod_gmp__init(&pint2p, pmpz, p);
+#else
+    mpz_mul_2exp(pmpz, pmpz, p);
+    shift_divmod_gmp__init_from_num(&pint2p, pmpz);
+#endif
     mpz_clear(pmpz);
 #else
     mpz_t pint2p;
