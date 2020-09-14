@@ -25,5 +25,11 @@ divmod-clang-with-shift.exe: $(C_FILE) $(HEADERS)
 divmod-clang-wo-shift.exe: $(C_FILE) $(HEADERS)
 	clang -o $@ $(GCC_OPT_FLAGS) $< -lgmp
 
+test: divmod-test.exe
+	CMOCKA_MESSAGE_OUTPUT=TAP prove ./divmod-test.exe
+
+divmod-test.exe: shift_divmod_gmp__test.c $(HEADERS)
+	gcc -D USE_SHIFT=1 -o $@ $(GCC_OPT_FLAGS) $< -lgmp -lcmocka
+
 # vim:ft=make
 #
