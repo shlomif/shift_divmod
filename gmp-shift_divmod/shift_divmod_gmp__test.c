@@ -40,27 +40,52 @@ static void main_tests(void **state GCC_UNUSED)
         for (size_t base = 1; base < 10; base += 1)
         {
             size_t m = (base << shift);
-            mpz_t mpbase;
-            mpz_init_set_ui(mpbase, base);
-            shift_divmod_gmp__type modder;
-            shift_divmod_gmp__init(&modder, mpbase, shift);
-            assert_int_equal(mpz_cmp_ui(modder.n, m), 0);
-            /* code */
-            for (size_t x = 0; x < m * 10; ++x)
             {
-                mpz_t mod, mpx, div;
-                mpz_init_set_ui(mod, 0);
-                mpz_init_set_ui(div, 0);
-                mpz_init_set_ui(mpx, x);
-                shift_divmod_gmp__divmod(&modder, div, mod, mpx);
-                assert_int_equal(mpz_cmp_ui(mod, (x % m)), 0);
-                assert_int_equal(mpz_cmp_ui(div, (x / m)), 0);
-                mpz_clear(div);
-                mpz_clear(mod);
-                mpz_clear(mpx);
+                mpz_t mpbase;
+                mpz_init_set_ui(mpbase, base);
+                shift_divmod_gmp__type modder;
+                shift_divmod_gmp__init(&modder, mpbase, shift);
+                assert_int_equal(mpz_cmp_ui(modder.n, m), 0);
+                /* code */
+                for (size_t x = 0; x < m * 10; ++x)
+                {
+                    mpz_t mod, mpx, div;
+                    mpz_init_set_ui(mod, 0);
+                    mpz_init_set_ui(div, 0);
+                    mpz_init_set_ui(mpx, x);
+                    shift_divmod_gmp__divmod(&modder, div, mod, mpx);
+                    assert_int_equal(mpz_cmp_ui(mod, (x % m)), 0);
+                    assert_int_equal(mpz_cmp_ui(div, (x / m)), 0);
+                    mpz_clear(div);
+                    mpz_clear(mod);
+                    mpz_clear(mpx);
+                }
+                shift_divmod_gmp__clear(&modder);
+                mpz_clear(mpbase);
             }
-            shift_divmod_gmp__clear(&modder);
-            mpz_clear(mpbase);
+            {
+                mpz_t mpn;
+                mpz_init_set_ui(mpn, m);
+                shift_divmod_gmp__type modder;
+                shift_divmod_gmp__init_from_num(&modder, mpn);
+                assert_int_equal(mpz_cmp_ui(modder.n, m), 0);
+                /* code */
+                for (size_t x = 0; x < m * 10; ++x)
+                {
+                    mpz_t mod, mpx, div;
+                    mpz_init_set_ui(mod, 0);
+                    mpz_init_set_ui(div, 0);
+                    mpz_init_set_ui(mpx, x);
+                    shift_divmod_gmp__divmod(&modder, div, mod, mpx);
+                    assert_int_equal(mpz_cmp_ui(mod, (x % m)), 0);
+                    assert_int_equal(mpz_cmp_ui(div, (x / m)), 0);
+                    mpz_clear(div);
+                    mpz_clear(mod);
+                    mpz_clear(mpx);
+                }
+                shift_divmod_gmp__clear(&modder);
+                mpz_clear(mpn);
+            }
         }
     }
 }
