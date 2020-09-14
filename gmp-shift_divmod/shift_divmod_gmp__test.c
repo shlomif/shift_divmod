@@ -37,7 +37,7 @@ static void main_tests(void **state GCC_UNUSED)
 {
     for (size_t shift = 2; shift < 10; ++shift)
     {
-        for (size_t base = 1; base < 10; base += 2)
+        for (size_t base = 1; base < 10; base += 1)
         {
             size_t m = (base << shift);
             mpz_t mpbase;
