@@ -1,3 +1,8 @@
+0.4.0
+    Add a C+gmplib code inside the GitHub repository.
+
+    Add more documentation.
+
 0.2.0
     Add the benchmarks and refactor/extend the example code.
 

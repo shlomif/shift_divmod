@@ -19,12 +19,12 @@ dist_name = "shift_divmod"
 
 obj = DistManager(
     dist_name=dist_name,
-    dist_version="0.2.0",
+    dist_version="0.4.0",
     project_name="ShiftDivMod",
     project_short_description=(
         "Implement faster divmod() for moduli with trailing 0 bits"
     ),
-    release_date="2020-09-13",
+    release_date="2020-09-14",
     project_year="2020",
     aur_email="shlomif@cpan.org",
     project_email="shlomif@cpan.org",
