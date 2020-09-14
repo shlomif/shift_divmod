@@ -1,5 +1,5 @@
 PURPOSE
--------
+=======
 
 This distribution implements faster divmod() (and ``.mod()``) operations
 for moduli with a large number of trailing 0 bits (where the div/mod base
@@ -13,12 +13,12 @@ Also provided is a port to C and gmplib (= GNU multiple precision):
 https://github.com/shlomif/shift_divmod/tree/master/gmp-shift_divmod
 
 INSTALLATION
-------------
+============
 
 pip3 install shift_divmod
 
 USAGE
------
+=====
 
 ::
 
@@ -36,7 +36,7 @@ USAGE
     print( modder.divmod(x) )
 
 NOTES
------
+=====
 
 The code from which this distribution has been derived, was proposed as a
 proof-of-concept for a potential improvement for the built in cpython3
@@ -47,7 +47,7 @@ libdivide ( https://github.com/ridiculousfish/libdivide ) provides a
 different, but also interesting, approach for optimizing division.
 
 BENCHMARKS:
------------
+===========
 
 On my system, I got these results after running
 ``python3 code/examples/shift_divmod_example.py bench`` (reformated
@@ -89,4 +89,24 @@ With the C and gmplib version:
 - ``mpz_mod`` runs the benchmark in about 160 seconds.
 - ``shift_divmod`` runs the benchmark in about 35 seconds.
 - ``pypy3`` runs the pure-Python code in 25 seconds (!).
+
+The Secret Sauce:
+-----------------
+
+The code utilises the fact that `<https://en.wikipedia.org/wiki/Bitwise_operation> bitwise operations`
+are fast, and the magic happens in this code:
+
+::
+
+    def divmod(self, inp):
+        """calculate divmod(inp, self.n)"""
+        if inp < self.n:
+            return 0, inp
+        div, mod = divmod((inp >> self.shift), self.base)
+        return div, ((mod << self.shift) | (inp & self.mask))
+
+(Or the equivalent but more bureaucratic C and gmplib code.)
+
+Note that ``self.mask`` is precalculated to be
+``((1 << self.shift) - 1)``.
 
