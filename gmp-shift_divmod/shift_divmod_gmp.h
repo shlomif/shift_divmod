@@ -29,7 +29,8 @@ static void shift_divmod_gmp__init(
     mpz_init(dest->shifted_input);
 }
 
-static const unsigned long TRY_SHIFTS[9] = {200000, 20000, 2000, 200, 20, 1, 0};
+static const unsigned long SHIFT_DIVMOD_GMP__BIT_SHIFTS_TO_TRY[9] = {
+    200000, 20000, 2000, 200, 20, 1, 0};
 
 static void shift_divmod_gmp__init_from_num(
     shift_divmod_gmp__type *const dest, mpz_t inp)
@@ -37,9 +38,9 @@ static void shift_divmod_gmp__init_from_num(
     mpz_t n;
     unsigned long shift = 0;
     mpz_init_set(n, inp);
-    for (int i = 0; TRY_SHIFTS[i]; i++)
+    for (int i = 0; SHIFT_DIVMOD_GMP__BIT_SHIFTS_TO_TRY[i]; i++)
     {
-        const unsigned long try_shift = TRY_SHIFTS[i];
+        const unsigned long try_shift = SHIFT_DIVMOD_GMP__BIT_SHIFTS_TO_TRY[i];
         mpz_t mask;
         mpz_init_set_ui(mask, 1);
         mpz_mul_2exp(mask, mask, try_shift);
