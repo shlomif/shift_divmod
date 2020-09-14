@@ -76,7 +76,7 @@ static unsigned long mytest(const unsigned long p)
         v_printf("mod %lu\n", i);
 
 #ifdef USE_SHIFT
-        shift_divmod_gmp__mod(&pint2p, ret);
+        shift_divmod_gmp__mod(&pint2p, ret, ret);
 #else
 #if 0
         if (mpz_cmp(ret, pint2p) >= 0)

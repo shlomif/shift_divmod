@@ -39,16 +39,20 @@ static void shift_divmod_gmp__clear(shift_divmod_gmp__type *const modder)
 }
 
 static void shift_divmod_gmp__mod(
-    shift_divmod_gmp__type *const modder, mpz_t ret)
+    shift_divmod_gmp__type *const modder, mpz_t ret, mpz_t inp)
 {
-    if (mpz_cmp(ret, modder->n) >= 0)
+    if (mpz_cmp(inp, modder->n) >= 0)
     {
-        mpz_div_2exp(modder->shifted_input, ret, modder->shift);
+        mpz_div_2exp(modder->shifted_input, inp, modder->shift);
         mpz_mod(modder->shifted_input, modder->shifted_input, modder->base);
         mpz_mul_2exp(
             modder->shifted_input, modder->shifted_input, modder->shift);
-        mpz_and(modder->lower_and_masked_input, ret, modder->mask);
-        mpz_ior(ret, modder->shifted_input, modder->lower_and_masked_input);
+        mpz_and(ret, inp, modder->mask);
+        mpz_ior(ret, modder->shifted_input, ret);
+    }
+    else
+    {
+        mpz_set(ret, inp);
     }
 }
 
