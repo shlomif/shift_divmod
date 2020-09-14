@@ -31,5 +31,8 @@ test: divmod-test.exe
 divmod-test.exe: shift_divmod_gmp__test.c $(HEADERS)
 	gcc -D USE_SHIFT=1 -o $@ $(GCC_OPT_FLAGS) $< -lgmp -lcmocka
 
+clean:
+	rm -f *.exe
+
 # vim:ft=make
 #
