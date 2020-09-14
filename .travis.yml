@@ -1,0 +1,18 @@
+install:
+- pip install -U pip
+- pip install cookiecutter pydistman
+- pip --version
+- ( cd python-shift_divmod && python3 python_pypi_dist_manager.py build_only )
+- ( cd python-shift_divmod && cat dest/requirements.txt )
+- ( cd python-shift_divmod && cd dest && pip install -r requirements.txt && pip install
+  . )
+language: python
+python:
+- '3.5'
+- '3.6'
+- '3.7'
+- '3.8'
+- pypy3
+script:
+- ( cd python-shift_divmod && cd dest && py.test --cov shift_divmod --cov-report term-missing
+  tests/ )
