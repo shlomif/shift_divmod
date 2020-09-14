@@ -69,8 +69,9 @@ static void shift_divmod_gmp__clear(shift_divmod_gmp__type *const modder)
     mpz_clear(modder->shifted_input);
 }
 
-static inline void shift_divmod_gmp__divmod(shift_divmod_gmp__type *const modder,
-    mpz_t ret_div, mpz_t ret_mod, mpz_t inp)
+static inline void shift_divmod_gmp__divmod(
+    shift_divmod_gmp__type *const modder, mpz_t ret_div, mpz_t ret_mod,
+    mpz_t inp)
 {
     if (mpz_cmp(inp, modder->n) >= 0)
     {
