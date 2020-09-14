@@ -44,6 +44,7 @@ static void main_tests(void **state GCC_UNUSED)
             mpz_init_set_ui(mpbase, base);
             shift_divmod_gmp__type modder;
             shift_divmod_gmp__init(&modder, mpbase, shift);
+            assert_int_equal(mpz_cmp_ui(modder.n, m), 0);
             /* code */
             for (size_t x = 0; x < m * 10; ++x)
             {
