@@ -4,8 +4,8 @@ ShiftDivMod.  Implement faster divmod() for moduli with trailing 0 bits
 :Info: This is the README file for ShiftDivMod.
 :Author: Shlomi Fish <shlomif@cpan.org>
 :Copyright: © 2020, Shlomi Fish.
-:Date: 2020-09-13
-:Version: 0.2.0
+:Date: 2020-09-14
+:Version: 0.4.0
 
 .. index: README
 .. image:: https://travis-ci.org/shlomif/shift_divmod.svg?branch=master
