@@ -9,6 +9,9 @@ It should yield the same result as the built-n divmod() function for
 positive numerators (its behaviour for negative ones is currently
 untested and undefined).
 
+Also provided is a port to C and gmplib (= GNU multiple precision):
+https://github.com/shlomif/shift_divmod/tree/master/gmp-shift_divmod
+
 INSTALLATION
 ------------
 
@@ -80,4 +83,10 @@ As can be noticed the shift_divmod based versions are over 4 times faster than
 GMP and much faster than the builtinops which only completed 25 out of 1,000 iterations
 before being interrupted. Note that for that use case, using GMP's modular exponentiation
 seems even faster.
+
+With the C and gmplib version:
+
+- ``mpz_mod`` runs the benchmark in about 160 seconds.
+- ``shift_divmod`` runs the benchmark in about 35 seconds.
+- ``pypy3`` runs the pure-Python code in 25 seconds (!).
 
