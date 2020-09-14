@@ -38,21 +38,23 @@ static void shift_divmod_gmp__clear(shift_divmod_gmp__type *const modder)
     mpz_clear(modder->lower_and_masked_input);
 }
 
-static void shift_divmod_gmp__mod(
-    shift_divmod_gmp__type *const modder, mpz_t ret, mpz_t inp)
+static void shift_divmod_gmp__divmod(shift_divmod_gmp__type *const modder,
+    mpz_t ret_div, mpz_t ret_mod, mpz_t inp)
 {
     if (mpz_cmp(inp, modder->n) >= 0)
     {
         mpz_div_2exp(modder->shifted_input, inp, modder->shift);
-        mpz_mod(modder->shifted_input, modder->shifted_input, modder->base);
+        mpz_fdiv_qr(ret_div, modder->shifted_input, modder->shifted_input,
+            modder->base);
         mpz_mul_2exp(
             modder->shifted_input, modder->shifted_input, modder->shift);
-        mpz_and(ret, inp, modder->mask);
-        mpz_ior(ret, modder->shifted_input, ret);
+        mpz_and(ret_mod, inp, modder->mask);
+        mpz_ior(ret_mod, modder->shifted_input, ret_mod);
     }
     else
     {
-        mpz_set(ret, inp);
+        mpz_set_ui(ret_div, 0);
+        mpz_set(ret_mod, inp);
     }
 }
 

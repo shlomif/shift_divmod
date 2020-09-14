@@ -57,8 +57,9 @@ static unsigned long mytest(const unsigned long p)
 #endif
 #endif
 
-    mpz_t ret;
+    mpz_t ret, ret_div;
     mpz_init_set_ui(ret, 2);
+    mpz_init(ret_div);
 
 #ifdef OPT
     mpz_powm(ret, ret, t2int2p, pint2p);
@@ -76,7 +77,7 @@ static unsigned long mytest(const unsigned long p)
         v_printf("mod %lu\n", i);
 
 #ifdef USE_SHIFT
-        shift_divmod_gmp__mod(&pint2p, ret, ret);
+        shift_divmod_gmp__divmod(&pint2p, ret_div, ret, ret);
 #else
 #if 0
         if (mpz_cmp(ret, pint2p) >= 0)
@@ -95,6 +96,7 @@ static unsigned long mytest(const unsigned long p)
     mpz_mod_ui(ret, ret, p * p);
     const unsigned long rett = mpz_get_ui(ret);
     mpz_clear(ret);
+    mpz_clear(ret_div);
 #ifdef USE_SHIFT
     shift_divmod_gmp__clear(&pint2p);
 #else

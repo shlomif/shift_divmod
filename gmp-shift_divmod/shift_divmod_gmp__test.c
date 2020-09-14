@@ -48,11 +48,14 @@ static void main_tests(void **state GCC_UNUSED)
             /* code */
             for (size_t x = 0; x < m * 10; ++x)
             {
-                mpz_t mod, mpx;
+                mpz_t mod, mpx, div;
                 mpz_init_set_ui(mod, 0);
+                mpz_init_set_ui(div, 0);
                 mpz_init_set_ui(mpx, x);
-                shift_divmod_gmp__mod(&modder, mod, mpx);
+                shift_divmod_gmp__divmod(&modder, div, mod, mpx);
                 assert_int_equal(mpz_cmp_ui(mod, (x % m)), 0);
+                assert_int_equal(mpz_cmp_ui(div, (x / m)), 0);
+                mpz_clear(div);
                 mpz_clear(mod);
                 mpz_clear(mpx);
             }
