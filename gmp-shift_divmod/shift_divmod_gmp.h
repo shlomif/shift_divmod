@@ -12,7 +12,7 @@
 
 typedef struct
 {
-    mpz_t base, n, mask, shifted_input, lower_and_masked_input;
+    mpz_t base, n, mask, shifted_input;
     unsigned long shift;
 } shift_divmod_gmp__type;
 
@@ -27,7 +27,6 @@ static void shift_divmod_gmp__init(
     mpz_mul_2exp(dest->mask, dest->mask, dest->shift);
     mpz_sub_ui(dest->mask, dest->mask, 1);
     mpz_init(dest->shifted_input);
-    mpz_init(dest->lower_and_masked_input);
 }
 static void shift_divmod_gmp__clear(shift_divmod_gmp__type *const modder)
 {
@@ -35,7 +34,6 @@ static void shift_divmod_gmp__clear(shift_divmod_gmp__type *const modder)
     mpz_clear(modder->n);
     mpz_clear(modder->mask);
     mpz_clear(modder->shifted_input);
-    mpz_clear(modder->lower_and_masked_input);
 }
 
 static void shift_divmod_gmp__divmod(shift_divmod_gmp__type *const modder,
