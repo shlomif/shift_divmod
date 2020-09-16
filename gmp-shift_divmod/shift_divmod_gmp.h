@@ -85,8 +85,15 @@ static inline void shift_divmod_gmp__divmod(
     }
     else
     {
-        mpz_set_ui(ret_div, 0);
-        mpz_set(ret_mod, inp);
+        if (mpz_cmp_ui(inp, 0) < 0)
+        {
+            mpz_fdiv_qr(ret_div, ret_mod, inp, modder->n);
+        }
+        else
+        {
+            mpz_set_ui(ret_div, 0);
+            mpz_set(ret_mod, inp);
+        }
     }
 }
 
