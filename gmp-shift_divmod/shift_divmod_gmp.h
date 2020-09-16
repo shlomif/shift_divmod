@@ -16,8 +16,8 @@ typedef struct
     unsigned long shift;
 } shift_divmod_gmp__type;
 
-static void shift_divmod_gmp__init(
-    shift_divmod_gmp__type *const dest, mpz_t base, const unsigned long shift)
+static void shift_divmod_gmp__init(shift_divmod_gmp__type *const dest,
+    const mpz_t base, const unsigned long shift)
 {
     dest->shift = shift;
     mpz_init_set(dest->base, base);
@@ -33,12 +33,12 @@ static const unsigned long SHIFT_DIVMOD_GMP__BIT_SHIFTS_TO_TRY[9] = {
     200000, 20000, 2000, 200, 20, 1, 0};
 
 static void shift_divmod_gmp__init_from_num(
-    shift_divmod_gmp__type *const dest, mpz_t inp)
+    shift_divmod_gmp__type *const dest, const mpz_t inp)
 {
     mpz_t n;
     unsigned long shift = 0;
     mpz_init_set(n, inp);
-    for (int i = 0; SHIFT_DIVMOD_GMP__BIT_SHIFTS_TO_TRY[i]; i++)
+    for (int i = 0; SHIFT_DIVMOD_GMP__BIT_SHIFTS_TO_TRY[i]; ++i)
     {
         const unsigned long try_shift = SHIFT_DIVMOD_GMP__BIT_SHIFTS_TO_TRY[i];
         mpz_t mask;
@@ -71,7 +71,7 @@ static void shift_divmod_gmp__clear(shift_divmod_gmp__type *const modder)
 
 static inline void shift_divmod_gmp__divmod(
     shift_divmod_gmp__type *const modder, mpz_t ret_div, mpz_t ret_mod,
-    mpz_t inp)
+    const mpz_t inp)
 {
     if (mpz_cmp(inp, modder->n) >= 0)
     {
