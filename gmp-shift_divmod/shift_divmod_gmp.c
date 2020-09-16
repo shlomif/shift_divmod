@@ -48,6 +48,8 @@ static unsigned long mytest(const unsigned long p)
 #else
     mpz_mul_2exp(pmpz, pmpz, p);
     shift_divmod_gmp__init_from_num(&pint2p, pmpz);
+    shift_divmod_gmp__scratch__type scratch;
+    shift_divmod_gmp__scratch__init(&scratch, &pint2p);
 #endif
     mpz_clear(pmpz);
 #else
@@ -82,7 +84,7 @@ static unsigned long mytest(const unsigned long p)
         v_printf("mod %lu\n", i);
 
 #ifdef USE_SHIFT
-        shift_divmod_gmp__divmod(&pint2p, ret_div, ret, ret);
+        shift_divmod_gmp__divmod(&pint2p, &scratch, ret_div, ret, ret);
 #else
 #if 0
         if (mpz_cmp(ret, pint2p) >= 0)
@@ -103,6 +105,7 @@ static unsigned long mytest(const unsigned long p)
     mpz_clear(ret);
     mpz_clear(ret_div);
 #ifdef USE_SHIFT
+    shift_divmod_gmp__scratch__clear(&scratch);
     shift_divmod_gmp__clear(&pint2p);
 #else
     mpz_clear(pint2p);

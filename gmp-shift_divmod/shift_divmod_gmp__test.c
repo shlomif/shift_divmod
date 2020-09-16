@@ -45,6 +45,8 @@ static void main_tests(void **state GCC_UNUSED)
                 mpz_init_set_ui(mpbase, base);
                 shift_divmod_gmp__type modder;
                 shift_divmod_gmp__init(&modder, mpbase, shift);
+                shift_divmod_gmp__scratch__type scratch;
+                shift_divmod_gmp__scratch__init(&scratch, &modder);
                 assert_int_equal(mpz_cmp_ui(modder.n, m), 0);
                 /* code */
                 for (size_t x = 0; x < m * 10; ++x)
@@ -53,13 +55,14 @@ static void main_tests(void **state GCC_UNUSED)
                     mpz_init_set_ui(mod, 0);
                     mpz_init_set_ui(div, 0);
                     mpz_init_set_ui(mpx, x);
-                    shift_divmod_gmp__divmod(&modder, div, mod, mpx);
+                    shift_divmod_gmp__divmod(&modder, &scratch, div, mod, mpx);
                     assert_int_equal(mpz_cmp_ui(mod, (x % m)), 0);
                     assert_int_equal(mpz_cmp_ui(div, (x / m)), 0);
                     mpz_clear(div);
                     mpz_clear(mod);
                     mpz_clear(mpx);
                 }
+                shift_divmod_gmp__scratch__clear(&scratch);
                 shift_divmod_gmp__clear(&modder);
                 mpz_clear(mpbase);
             }
@@ -68,6 +71,8 @@ static void main_tests(void **state GCC_UNUSED)
                 mpz_init_set_ui(mpn, m);
                 shift_divmod_gmp__type modder;
                 shift_divmod_gmp__init_from_num(&modder, mpn);
+                shift_divmod_gmp__scratch__type scratch;
+                shift_divmod_gmp__scratch__init(&scratch, &modder);
                 assert_int_equal(mpz_cmp_ui(modder.n, m), 0);
                 /* code */
                 for (size_t x = 0; x < m * 10; ++x)
@@ -76,13 +81,14 @@ static void main_tests(void **state GCC_UNUSED)
                     mpz_init_set_ui(mod, 0);
                     mpz_init_set_ui(div, 0);
                     mpz_init_set_ui(mpx, x);
-                    shift_divmod_gmp__divmod(&modder, div, mod, mpx);
+                    shift_divmod_gmp__divmod(&modder, &scratch, div, mod, mpx);
                     assert_int_equal(mpz_cmp_ui(mod, (x % m)), 0);
                     assert_int_equal(mpz_cmp_ui(div, (x / m)), 0);
                     mpz_clear(div);
                     mpz_clear(mod);
                     mpz_clear(mpx);
                 }
+                shift_divmod_gmp__scratch__clear(&scratch);
                 shift_divmod_gmp__clear(&modder);
                 mpz_clear(mpn);
             }

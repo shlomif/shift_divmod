@@ -9,12 +9,18 @@
 #define SHIFT_DIVMOD_GMP_H
 
 #include <gmp.h>
+#include "rinutils/unused.h"
 
 typedef struct
 {
-    mpz_t base, n, mask, shifted_input;
+    mpz_t base, n, mask;
     unsigned long shift;
 } shift_divmod_gmp__type;
+
+typedef struct
+{
+    mpz_t shifted_input;
+} shift_divmod_gmp__scratch__type;
 
 static void shift_divmod_gmp__init(shift_divmod_gmp__type *const dest,
     const mpz_t base, const unsigned long shift)
@@ -26,9 +32,14 @@ static void shift_divmod_gmp__init(shift_divmod_gmp__type *const dest,
     mpz_init_set_ui(dest->mask, 1);
     mpz_mul_2exp(dest->mask, dest->mask, dest->shift);
     mpz_sub_ui(dest->mask, dest->mask, 1);
-    mpz_init(dest->shifted_input);
 }
 
+static void shift_divmod_gmp__scratch__init(
+    shift_divmod_gmp__scratch__type *const dest,
+    const shift_divmod_gmp__type *const src GCC_UNUSED)
+{
+    mpz_init(dest->shifted_input);
+}
 static const unsigned long SHIFT_DIVMOD_GMP__BIT_SHIFTS_TO_TRY[9] = {
     200000, 20000, 2000, 200, 20, 1, 0};
 
@@ -66,22 +77,28 @@ static void shift_divmod_gmp__clear(shift_divmod_gmp__type *const modder)
     mpz_clear(modder->base);
     mpz_clear(modder->n);
     mpz_clear(modder->mask);
-    mpz_clear(modder->shifted_input);
+}
+
+static void shift_divmod_gmp__scratch__clear(
+    shift_divmod_gmp__scratch__type *const scratch)
+{
+    mpz_clear(scratch->shifted_input);
 }
 
 static inline void shift_divmod_gmp__divmod(
-    shift_divmod_gmp__type *const modder, mpz_t ret_div, mpz_t ret_mod,
-    const mpz_t inp)
+    const shift_divmod_gmp__type *const modder,
+    shift_divmod_gmp__scratch__type *const scratch, mpz_t ret_div,
+    mpz_t ret_mod, const mpz_t inp)
 {
     if (mpz_cmp(inp, modder->n) >= 0)
     {
-        mpz_div_2exp(modder->shifted_input, inp, modder->shift);
-        mpz_fdiv_qr(ret_div, modder->shifted_input, modder->shifted_input,
+        mpz_div_2exp(scratch->shifted_input, inp, modder->shift);
+        mpz_fdiv_qr(ret_div, scratch->shifted_input, scratch->shifted_input,
             modder->base);
         mpz_mul_2exp(
-            modder->shifted_input, modder->shifted_input, modder->shift);
+            scratch->shifted_input, scratch->shifted_input, modder->shift);
         mpz_and(ret_mod, inp, modder->mask);
-        mpz_ior(ret_mod, modder->shifted_input, ret_mod);
+        mpz_ior(ret_mod, scratch->shifted_input, ret_mod);
     }
     else
     {
