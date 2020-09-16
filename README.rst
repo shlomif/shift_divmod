@@ -106,7 +106,7 @@ With the C and gmplib version:
 The Secret Sauce:
 -----------------
 
-The code utilises the fact that `<https://en.wikipedia.org/wiki/Bitwise_operation> bitwise operations`
+The code utilises the fact that `bitwise operations <https://en.wikipedia.org/wiki/Bitwise_operation>`_
 are fast, and the magic happens in this code:
 
 ::
