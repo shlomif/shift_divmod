@@ -10,6 +10,7 @@ all: \
 	divmod-clang-wo-shift.exe
 
 GCC_OPT_FLAGS := -O3 -flto -fwhole-program -fomit-frame-pointer -march=native -Wall -Wextra
+CLANG_OPT_FLAGS := -O3 -flto -fomit-frame-pointer -march=native -Wall -Wextra -Weverything -Wno-extra-semi-stmt
 HEADERS = shift_divmod_gmp.h
 C_FILE := shift_divmod_gmp.c
 
@@ -22,10 +23,10 @@ divmod-gcc-wo-shift.exe: $(C_FILE) $(HEADERS)
 	gcc -o $@ $(GCC_OPT_FLAGS) $< $(LIBS)
 
 divmod-clang-with-shift.exe: $(C_FILE) $(HEADERS)
-	clang -D USE_SHIFT=1 -o $@ $(GCC_OPT_FLAGS) $< $(LIBS)
+	clang -D USE_SHIFT=1 -o $@ $(CLANG_OPT_FLAGS) $< $(LIBS)
 
 divmod-clang-wo-shift.exe: $(C_FILE) $(HEADERS)
-	clang -o $@ $(GCC_OPT_FLAGS) $< $(LIBS)
+	clang -o $@ $(CLANG_OPT_FLAGS) $< $(LIBS)
 
 test: divmod-test.exe
 	CMOCKA_MESSAGE_OUTPUT=TAP prove ./divmod-test.exe
