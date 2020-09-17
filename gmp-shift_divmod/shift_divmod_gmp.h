@@ -8,7 +8,12 @@
 #ifndef SHIFT_DIVMOD_GMP_H
 #define SHIFT_DIVMOD_GMP_H
 
+#include <stdlib.h>
+#include <stdio.h>
+
 #include <gmp.h>
+
+#include "rinutils/likely.h"
 #include "rinutils/unused.h"
 
 typedef struct
@@ -102,8 +107,12 @@ static inline void shift_divmod_gmp__divmod(
     }
     else
     {
-        if (mpz_cmp_ui(inp, 0) < 0)
+        if (unlikely(mpz_cmp_ui(inp, 0) < 0))
         {
+#if 0
+            fprintf(stderr, "%s\n", "a falsely negative number!");
+            exit(1);
+#endif
             mpz_fdiv_qr(ret_div, ret_mod, inp, modder->n);
         }
         else
