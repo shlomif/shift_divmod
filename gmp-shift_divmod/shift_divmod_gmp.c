@@ -75,7 +75,11 @@ static unsigned long mytest(const unsigned long p)
     for (unsigned long i = 0; i < 1000; ++i)
     {
         v_printf("sq %lu\n", i);
+#if 1
         mpz_mul(ret, ret, ret);
+#else
+        mpz_pow_ui(ret, ret, 2);
+#endif
 
 #if 0
         gmp_fprintf(stdout, "%Zd\n", ret);
