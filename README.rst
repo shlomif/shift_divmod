@@ -5,7 +5,7 @@ ShiftDivMod.  Implement faster divmod() for moduli with trailing 0 bits
 :Author: Shlomi Fish <shlomif@cpan.org>
 :Copyright: © 2020, Shlomi Fish.
 :Date: 2020-09-20
-:Version: 0.4.2
+:Version: 0.4.3
 
 .. index: README
 .. image:: https://travis-ci.org/shlomif/shift_divmod.svg?branch=master
@@ -125,6 +125,7 @@ are fast, and the magic happens in this code (with some comments added for clari
         return div, ((mod << self.shift) | (inp & self.mask))
 
 (Or the equivalent but more bureaucratic C and gmplib code.)
+
 COPYRIGHT
 ---------
 Copyright © 2020, Shlomi Fish.
