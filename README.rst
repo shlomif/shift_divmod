@@ -4,8 +4,8 @@ ShiftDivMod.  Implement faster divmod() for moduli with trailing 0 bits
 :Info: This is the README file for ShiftDivMod.
 :Author: Shlomi Fish <shlomif@cpan.org>
 :Copyright: © 2020, Shlomi Fish.
-:Date: 2020-09-14
-:Version: 0.4.0
+:Date: 2020-09-20
+:Version: 0.4.2
 
 .. index: README
 .. image:: https://travis-ci.org/shlomif/shift_divmod.svg?branch=master
@@ -107,10 +107,16 @@ The Secret Sauce:
 -----------------
 
 The code utilises the fact that `bitwise operations <https://en.wikipedia.org/wiki/Bitwise_operation>`_
-are fast, and the magic happens in this code:
+are fast, and the magic happens in this code (with some comments added for clarity):
 
 ::
 
+    # Precalculating the object's field so that:
+    # self.shift : a non-negative integer signifying the bit shift
+    # self.base  : a non-negative integer which is shifted to
+    # form the modulu
+    # self.n = self.base << self.shift
+    # self.mask = ((1 << self.shift) - 1)
     def divmod(self, inp):
         """calculate divmod(inp, self.n)"""
         if inp < self.n:
@@ -119,10 +125,6 @@ are fast, and the magic happens in this code:
         return div, ((mod << self.shift) | (inp & self.mask))
 
 (Or the equivalent but more bureaucratic C and gmplib code.)
-
-Note that ``self.mask`` is precalculated to be
-``((1 << self.shift) - 1)``.
-
 COPYRIGHT
 ---------
 Copyright © 2020, Shlomi Fish.
