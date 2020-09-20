@@ -97,6 +97,7 @@ The code utilises the fact that `bitwise operations <https://en.wikipedia.org/wi
 are fast, and the magic happens in this code (with some comments added for clarity):
 
 ::
+
     # Precalculating the object's field so that:
     # self.shift : a non-negative integer signifying the bit shift
     # self.base  : a non-negative integer which is shifted to
