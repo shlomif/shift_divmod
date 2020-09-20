@@ -19,7 +19,7 @@ dist_name = "shift_divmod"
 
 obj = DistManager(
     dist_name=dist_name,
-    dist_version="0.4.2",
+    dist_version="0.4.3",
     project_name="ShiftDivMod",
     project_short_description=(
         "Implement faster divmod() for moduli with trailing 0 bits"

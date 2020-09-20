@@ -1,3 +1,6 @@
+0.4.3
+    Fix the README 's copyright header (missing empty line at the end).
+
 0.4.2
     Clarify the readme (to accommodate for a question by a co-developer).
 

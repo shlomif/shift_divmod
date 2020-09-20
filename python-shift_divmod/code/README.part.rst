@@ -112,3 +112,4 @@ are fast, and the magic happens in this code (with some comments added for clari
         return div, ((mod << self.shift) | (inp & self.mask))
 
 (Or the equivalent but more bureaucratic C and gmplib code.)
+
