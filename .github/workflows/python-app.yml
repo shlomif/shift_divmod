@@ -33,7 +33,8 @@ jobs:
               run: |
                 cd python-shift_divmod/
                 python python_pypi_dist_manager.py test
-            - name: Run tests
+            - name: C+GMPlib build and tests
               run: |
-                ( git clone https://github.com/shlomif/rinutils && cd rinutils && mkdir build && cd build && cmake .. && make install )
+                sudo apt-get -y install libcmocka-dev libgmp-dev
+                ( git clone https://github.com/shlomif/rinutils && cd rinutils && mkdir build && cd build && cmake .. && sudo make install )
                 cd gmp-shift_divmod/ && make && make test
