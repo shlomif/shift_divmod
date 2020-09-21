@@ -35,6 +35,6 @@ jobs:
                 python python_pypi_dist_manager.py test
             - name: C+GMPlib build and tests
               run: |
-                sudo apt-get -y install libcmocka-dev libgmp-dev
+                sudo apt-get -y install google-perftools libcmocka-dev libgmp-dev
                 ( git clone https://github.com/shlomif/rinutils && cd rinutils && mkdir build && cd build && cmake .. && sudo make install )
                 cd gmp-shift_divmod/ && make && make test
