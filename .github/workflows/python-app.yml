@@ -33,3 +33,6 @@ jobs:
               run: |
                 cd python-shift_divmod/
                 python python_pypi_dist_manager.py test
+            - name: Run tests
+              run: |
+                cd gmp-shift_divmod/ && make && make test
