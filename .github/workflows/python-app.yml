@@ -5,30 +5,31 @@ name: Python package
 on: [push, pull_request]
 
 jobs:
-  build:
+    build:
 
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.5, 3.6, 3.7, 3.8, 3.9-dev, pypy3]
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                # python-version: [3.5, 3.6, 3.7, 3.8, 3.9-dev, pypy3]
+                python-version: [3.8]
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      if: "!endsWith(matrix.python-version, '-dev')"
-      with:
-        python-version: ${{ matrix.python-version }}
-    - uses: deadsnakes/action@v1.0.0
-      if: endsWith(matrix.python-version, '-dev')
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        # pip install .
-        pip install -U attrs cookiecutter coverage flake8 pydistman pytest tox
-    - name: Run tests
-      run: |
-        cd python-shift_divmod/
-        python python_pypi_dist_manager.py test
+        steps:
+            - uses: actions/checkout@v2
+            - name: Set up Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v2
+              if: "!endsWith(matrix.python-version, '-dev')"
+              with:
+                python-version: ${{ matrix.python-version }}
+            - uses: deadsnakes/action@v1.0.0
+              if: endsWith(matrix.python-version, '-dev')
+              with:
+                python-version: ${{ matrix.python-version }}
+            - name: Install dependencies
+              run: |
+                python -m pip install --upgrade pip
+                # pip install .
+                pip install -U attrs cookiecutter coverage flake8 pydistman pytest tox
+            - name: Run tests
+              run: |
+                cd python-shift_divmod/
+                python python_pypi_dist_manager.py test
