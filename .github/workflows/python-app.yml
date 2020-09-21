@@ -35,4 +35,5 @@ jobs:
                 python python_pypi_dist_manager.py test
             - name: Run tests
               run: |
+                ( git clone https://github.com/shlomif/rinutils && cd rinutils && mkdir build && cd build && cmake .. && make install )
                 cd gmp-shift_divmod/ && make && make test
