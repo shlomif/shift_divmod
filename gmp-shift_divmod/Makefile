@@ -34,6 +34,10 @@ test: divmod-test.exe
 divmod-test.exe: shift_divmod_gmp__test.c $(HEADERS)
 	gcc -D USE_SHIFT=1 -o $@ $(GCC_OPT_FLAGS) $< $(LIBS) -lcmocka
 
+benchmark: all
+	time ./divmod-gcc-with-shift.exe
+	time ./divmod-gcc-wo-shift.exe
+
 clean:
 	rm -f *.exe
 
