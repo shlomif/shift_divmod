@@ -39,9 +39,8 @@ static unsigned long mytest(const unsigned long p)
     mpz_init_set_ui(pint2p, p);
     mpz_mul_2exp(pint2p, pint2p, p);
 
-    mpz_t ret, ret_div;
+    mpz_t ret;
     mpz_init_set_ui(ret, 2);
-    mpz_init(ret_div);
 
     // for (unsigned long i = 0; i < p; ++i)
     for (unsigned long i = 0; i < 1000; ++i)
@@ -58,7 +57,6 @@ static unsigned long mytest(const unsigned long p)
     mpz_mod_ui(ret, ret, p * p);
     const unsigned long rett = mpz_get_ui(ret);
     mpz_clear(ret);
-    mpz_clear(ret_div);
     mpz_clear(pint2p);
     return rett / p;
 }
