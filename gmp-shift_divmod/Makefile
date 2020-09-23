@@ -7,7 +7,8 @@ all: \
 	divmod-gcc-with-shift.exe \
 	divmod-gcc-wo-shift.exe \
 	divmod-clang-with-shift.exe \
-	divmod-clang-wo-shift.exe
+	divmod-clang-wo-shift.exe \
+	pure-gmp-bench.exe
 
 GCC_OPT_FLAGS := -O3 -flto -fwhole-program -fomit-frame-pointer -march=native -Wall -Wextra
 CLANG_OPT_FLAGS := -O3 -flto -fomit-frame-pointer -march=native -Wall -Wextra -Weverything -Wno-extra-semi-stmt
@@ -27,6 +28,9 @@ divmod-clang-with-shift.exe: $(C_FILE) $(HEADERS)
 
 divmod-clang-wo-shift.exe: $(C_FILE) $(HEADERS)
 	clang -o $@ $(CLANG_OPT_FLAGS) $< $(LIBS)
+
+pure-gmp-bench.exe: pure_gmp_benchmark.c
+	gcc -o $@ $(GCC_OPT_FLAGS) $< $(LIBS)
 
 test: divmod-test.exe
 	CMOCKA_MESSAGE_OUTPUT=TAP prove ./divmod-test.exe
