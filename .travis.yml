@@ -16,7 +16,7 @@ install:
 language: python
 python:
 - '3.8'
-- '3.10'
+- '3.9'
 - pypy3
 script:
 - ( cd python-shift_divmod && cd dest && py.test --cov shift_divmod --cov-report term-missing
