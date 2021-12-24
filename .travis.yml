@@ -1,3 +1,10 @@
+addons:
+    apt:
+        packages:
+            - cargo
+            - rustc
+        update: true
+dist: focal
 install:
 - pip install -U pip
 - pip install cookiecutter pydistman
@@ -8,10 +15,8 @@ install:
 #   . )
 language: python
 python:
-- '3.5'
-- '3.6'
-- '3.7'
 - '3.8'
+- '3.10'
 - pypy3
 script:
 - ( cd python-shift_divmod && cd dest && py.test --cov shift_divmod --cov-report term-missing
